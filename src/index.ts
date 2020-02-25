@@ -1,9 +1,15 @@
 import * as Phaser from "phaser";
 
+type Position = {
+  x: number;
+  y: number;
+};
+
 const boardSize = {
   width: 800,
   height: 600
 };
+const size = 10;
 
 var config = {
   type: Phaser.AUTO,
@@ -25,20 +31,22 @@ var config = {
 };
 new Phaser.Game(config);
 
-let graphics;
+let graphics: Phaser.GameObjects.Graphics;
 
 let position: {
   x: number;
   y: number;
 };
 let angle: number;
-let speed = 5;
+let speed = 3;
 let keys: {
   left: Phaser.Input.Keyboard.Key;
   right: Phaser.Input.Keyboard.Key;
   down: Phaser.Input.Keyboard.Key;
   up: Phaser.Input.Keyboard.Key;
 };
+
+let path: Phaser.Curves.Path;
 
 function create(this: Phaser.Scene) {
   graphics = this.add.graphics();
@@ -50,6 +58,8 @@ function create(this: Phaser.Scene) {
   };
   angle = 0;
 
+  path = this.add.path(position.x, position.y);
+
   keys = {
     left: this.input.keyboard.addKey("LEFT"),
     right: this.input.keyboard.addKey("RIGHT"),
@@ -58,7 +68,7 @@ function create(this: Phaser.Scene) {
   };
 }
 
-function update() {
+function update(this: Phaser.Scene) {
   graphics.clear();
 
   if (keys.left.isDown) {
@@ -80,6 +90,11 @@ function update() {
   position.x += dx;
   position.y += dy;
 
+  graphics.lineStyle(size, 0x00ff00, 0.3);
+  path.lineTo(position.x, position.y);
+
+  path.draw(graphics);
+
   if (
     position.x >= boardSize.width ||
     position.x <= 0 ||
@@ -92,5 +107,5 @@ function update() {
   }
 
   graphics.fillStyle(0xff0000, 1);
-  graphics.fillCircle(position.x, position.y, 12);
+  graphics.fillCircle(position.x, position.y, size / 2);
 }
