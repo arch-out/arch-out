@@ -1,0 +1,28 @@
+{
+  "name": "arch-out",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "watch": "parcel index.html",
+    "build": "npm run clean && parcel build index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sorteberg/arch-out.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sorteberg/arch-out/issues"
+  },
+  "homepage": "https://github.com/sorteberg/arch-out#readme",
+  "dependencies": {
+    "typescript": "^3.8.2"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "rimraf": "^3.0.2"
+  }
+}
