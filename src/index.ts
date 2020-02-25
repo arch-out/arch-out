@@ -9,7 +9,7 @@ const boardSize = {
   width: 800,
   height: 600
 };
-const size = 10;
+const size = 5;
 
 var config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -37,7 +37,7 @@ var config: Phaser.Types.Core.GameConfig = {
     arcade: {}
   }
 };
-const game = new Phaser.Game(config);
+new Phaser.Game(config);
 
 let history: Phaser.GameObjects.GameObject[] = [];
 let tail: Phaser.GameObjects.GameObject[] = [];
@@ -58,13 +58,13 @@ let keys: {
   d: Phaser.Input.Keyboard.Key;
 };
 let head: Phaser.GameObjects.Rectangle;
+let showHitboxes = false;
+let dead = false;
 
 let path: Phaser.Curves.Path;
 
 function create(this: Phaser.Scene) {
   graphics = this.add.graphics();
-
-  graphics.lineStyle(size, 0x00ff00, 0.3);
 
   this.input.enabled = true;
   position = {
@@ -83,12 +83,21 @@ function create(this: Phaser.Scene) {
     d: this.input.keyboard.addKey("d")
   };
 
-  head = this.add.rectangle(position.x, position.y, size, size, 0xffffff);
+  head = this.add.circle(position.x, position.y, size, 0xffffff);
 
   this.physics.add.existing(head);
 }
 
 function update(this: Phaser.Scene) {
+  if (!showHitboxes && keys.d.isDown) {
+    showHitboxes = true;
+    this.physics.world.createDebugGraphic();
+  }
+
+  if (dead) {
+    return;
+  }
+
   graphics.clear();
 
   if (keys.left.isDown) {
@@ -103,9 +112,6 @@ function update(this: Phaser.Scene) {
   if (keys.up.isDown) {
     speed += 1;
   }
-  if (keys.d.isDown) {
-    this.physics.world.createDebugGraphic();
-  }
 
   const dx = speed * Math.cos(angle);
   const dy = speed * Math.sin(angle);
@@ -113,16 +119,16 @@ function update(this: Phaser.Scene) {
   head.x += dx;
   head.y += dy;
 
-  history.push(this.add.rectangle(head.x, head.y, size, size));
-  if (history.length > 8) {
+  history.push(this.add.circle(head.x, head.y, size));
+  if (history.length > speed) {
     const crashable = history.shift();
     tail.push(crashable);
 
     this.physics.add.existing(crashable);
-    this.physics.add.collider(head, crashable, () => console.log("Yaaaay!!"));
+    this.physics.add.collider(head, crashable, () => (dead = true));
   }
 
-  graphics.lineStyle(size, 0x00ff00, 0.3);
+  graphics.lineStyle(size * 2, 0x00ff00, 0.3);
   path.lineTo(head.x, head.y);
   path.draw(graphics);
 
@@ -132,8 +138,6 @@ function update(this: Phaser.Scene) {
     head.y >= boardSize.height ||
     head.y <= 0
   ) {
-    head.x -= dx;
-    head.y -= dy;
-    speed = 0;
+    dead = true;
   }
 }
