@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/sorteberg/arch-out#readme",
   "dependencies": {
+    "phaser": "^3.22.0",
     "typescript": "^3.8.2"
   },
   "devDependencies": {
