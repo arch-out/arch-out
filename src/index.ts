@@ -1,7 +1,9 @@
 import * as Phaser from "phaser";
 
-// index.ts
-console.log("Hello world");
+const boardSize = {
+  width: 800,
+  height: 600
+};
 
 var config = {
   type: Phaser.AUTO,
@@ -15,7 +17,53 @@ var config = {
   dom: {
     createContainer: false
   },
-  scene: null,
+  scene: {
+    create: create,
+    update: update
+  },
   backgroundColor: 0x333333
 };
-var game = new Phaser.Game(config);
+new Phaser.Game(config);
+
+let graphics;
+
+let position: {
+  x: number;
+  y: number;
+};
+let direction: {
+  dx: number;
+  dy: number;
+};
+
+function create() {
+  graphics = this.add.graphics();
+
+  position = {
+    x: 100,
+    y: 100
+  };
+  direction = {
+    dx: 10,
+    dy: 5
+  };
+}
+
+function update() {
+  graphics.clear();
+
+  position.x += direction.dx;
+  position.y += direction.dy;
+
+  if (position.x >= boardSize.width || position.x <= 0) {
+    direction.dx *= -1;
+    position.x += direction.dx;
+  }
+  if (position.y >= boardSize.height || position.y <= 0) {
+    direction.dy *= -1;
+    position.y += direction.dy;
+  }
+
+  graphics.fillStyle(0xff0000, 1);
+  graphics.fillCircle(position.x, position.y, 12);
+}
