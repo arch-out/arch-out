@@ -19,6 +19,7 @@ export class Snake extends Phaser.GameObjects.Arc {
   boardSize: BoardSize;
 
   lastCollidable: Phaser.GameObjects.GameObject;
+  lastSelfCollidable: Phaser.GameObjects.GameObject;
 
   constructor(
     scene: Phaser.Scene,
@@ -66,12 +67,13 @@ export class Snake extends Phaser.GameObjects.Arc {
     this.head.x += dx;
     this.head.y += dy;
 
-    this.history.push(this.scene.add.circle(this.head.x, this.head.y, size));
-    if (this.history.length > 5) {
-      const crashable = this.history.shift();
-      this.scene.physics.add.existing(crashable);
+    const collidable = this.scene.add.circle(this.head.x, this.head.y, size);
+    this.scene.physics.add.existing(collidable);
+    this.history.push(collidable);
+    this.lastCollidable = collidable;
 
-      this.lastCollidable = crashable;
+    if (this.history.length > 15) {
+      this.lastSelfCollidable = this.history.shift();
     }
 
     this.graphics.lineStyle(size * 2, 0x00ff00, 0.3);

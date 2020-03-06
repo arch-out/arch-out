@@ -84,22 +84,20 @@ export default class GameScene extends Phaser.Scene {
 
     this.snakes.forEach(s => s.update());
 
-    this.snakes.forEach((snake, index, array) => {
-      const lastCollidable = snake.lastCollidable;
+    this.snakes.forEach((snake, snakeIndex, array) => {
+      if (snake.dead) {
+        return;
+      }
 
-      const otherLastColliders = array.reduce((acc, curr, i) => {
-        if (i !== index) {
-          acc.push(curr.lastCollidable);
-        }
-
-        return acc;
-      }, []);
-
-      otherLastColliders.concat(lastCollidable).forEach(collidable => {
-        this.physics.add.collider(snake.head, collidable, () =>
-          snake.setDead()
-        );
-      });
+      array
+        .filter((_, i) => i !== snakeIndex)
+        .map(s => s.lastCollidable)
+        .concat(snake.lastSelfCollidable ? [snake.lastSelfCollidable] : [])
+        .forEach(collidable => {
+          this.physics.add.collider(snake.head, collidable, () =>
+            snake.setDead()
+          );
+        });
     });
   }
 }
