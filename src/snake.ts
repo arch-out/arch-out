@@ -1,4 +1,5 @@
 import { BoardSize } from "./types";
+import Player from "./player";
 
 const size = 5;
 const speed = 3;
@@ -21,8 +22,11 @@ export class Snake extends Phaser.GameObjects.Arc {
   lastCollidable: Phaser.GameObjects.GameObject;
   lastSelfCollidable: Phaser.GameObjects.GameObject;
 
+  player: Player;
+
   constructor(
     scene: Phaser.Scene,
+    player: Player,
     x: number,
     y: number,
     keyLeft: string,
@@ -30,6 +34,8 @@ export class Snake extends Phaser.GameObjects.Arc {
     boardSize: BoardSize
   ) {
     super(scene, 0);
+
+    this.player = player;
 
     this.graphics = scene.add.graphics();
 
@@ -51,6 +57,8 @@ export class Snake extends Phaser.GameObjects.Arc {
     if (this.dead) {
       return;
     }
+
+    this.player.score++;
 
     this.graphics.clear();
 
@@ -76,7 +84,7 @@ export class Snake extends Phaser.GameObjects.Arc {
       this.lastSelfCollidable = this.history.shift();
     }
 
-    this.graphics.lineStyle(size * 2, 0x00ff00, 0.3);
+    this.graphics.lineStyle(size * 2, this.player.color.color, 0.3);
     this.path.lineTo(this.head.x, this.head.y);
     this.path.draw(this.graphics);
 

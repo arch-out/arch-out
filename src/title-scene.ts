@@ -1,4 +1,4 @@
-import UiScene from "./ui-scene";
+import GameScene from "./game-scene";
 
 export default class TitleScene extends Phaser.Scene {
   constructor() {
@@ -21,6 +21,6 @@ export default class TitleScene extends Phaser.Scene {
   }
 
   startGame() {
-    this.scene.switch(UiScene.KEY);
+    this.scene.switch(GameScene.KEY);
   }
 }

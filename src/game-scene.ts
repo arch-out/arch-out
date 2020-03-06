@@ -1,28 +1,25 @@
 import * as Phaser from "phaser";
 import { BoardSize, Viewport } from "./types";
 import { Snake } from "./snake";
+import Player from "./player";
+import UiScene from "./ui-scene";
 
 const boardSize: BoardSize = {
   width: 800,
   height: 600
 };
 
+const controls = [
+  { left: "LEFT", right: "RIGHT" },
+  { left: "a", right: "s" },
+  { left: "v", right: "b" },
+  { left: "p", right: "å" }
+];
+
 export default class GameScene extends Phaser.Scene {
   public static KEY: string = "GameScene";
 
-  constructor(viewport: Viewport) {
-    super({
-      key: GameScene.KEY,
-      active: false,
-      visible: true,
-      physics: {
-        default: "arcade",
-        arcade: {}
-      }
-    });
-    this.viewport = viewport;
-  }
-
+  players: Player[];
   viewport: Viewport;
 
   history: Phaser.GameObjects.GameObject[] = [];
@@ -48,6 +45,20 @@ export default class GameScene extends Phaser.Scene {
 
   snakes: Snake[] = [];
 
+  constructor(viewport: Viewport, players: Player[]) {
+    super({
+      key: GameScene.KEY,
+      active: false,
+      visible: true,
+      physics: {
+        default: "arcade",
+        arcade: {}
+      }
+    });
+    this.viewport = viewport;
+    this.players = players;
+  }
+
   create() {
     this.cameras.main.setViewport(
       this.viewport.x,
@@ -64,9 +75,20 @@ export default class GameScene extends Phaser.Scene {
       d: this.input.keyboard.addKey("d")
     };
 
-    this.snakes.push(new Snake(this, 100, 100, "a", "s", boardSize));
-    this.snakes.push(new Snake(this, 200, 200, "v", "b", boardSize));
-    this.snakes.push(new Snake(this, 300, 300, "LEFT", "RIGHT", boardSize));
+    this.snakes = this.players.map(
+      (player, i) =>
+        new Snake(
+          this,
+          player,
+          100 + i * 100,
+          100 + i * 100,
+          controls[i].left,
+          controls[i].right,
+          boardSize
+        )
+    );
+
+    this.scene.launch(UiScene.KEY);
   }
 
   update() {
