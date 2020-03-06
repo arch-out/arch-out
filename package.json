@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf dist",
-    "watch": "parcel index.html",
+    "watch": "parcel index.html --log-level 4",
     "build": "npm run clean && parcel build index.html"
   },
   "repository": {
