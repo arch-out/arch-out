@@ -39,6 +39,8 @@ export default class GameScene extends Phaser.Scene {
   path: Phaser.Curves.Path;
 
   snakes: Snake[] = [];
+  startTime: number;
+  countdown: Phaser.GameObjects.Text;
 
   constructor(viewport: Viewport, players: Player[]) {
     super({
@@ -83,6 +85,12 @@ export default class GameScene extends Phaser.Scene {
         )
     );
 
+    this.countdown = this.add.text(200 - 100, 300 - 500 / 2, "", {
+      fontSize: 500
+    });
+    this.countdown.setColor("#34eb4c");
+    this.startTime = Date.now();
+
     this.scene.launch(UiScene.KEY);
   }
 
@@ -91,6 +99,13 @@ export default class GameScene extends Phaser.Scene {
       this.showHitboxes = true;
       this.physics.world.createDebugGraphic();
     }
+
+    var elapsed = (Date.now() - this.startTime) / 1000;
+    if (elapsed < 3) {
+      this.countdown.setText(`${3 - Math.floor(elapsed)}`);
+      return;
+    }
+    this.countdown.destroy();
 
     if (this.keys.down.isDown) {
       this.speed -= 1;

@@ -41,7 +41,7 @@ export class Snake extends Phaser.GameObjects.Arc {
 
     this.graphics = scene.add.graphics();
 
-    this.head = scene.add.circle(x, y, size, 0xffffff);
+    this.head = scene.add.circle(x, y, size, player.color.color);
     this.currentPath = scene.add.path(x, y);
     scene.physics.add.existing(this.head);
 
