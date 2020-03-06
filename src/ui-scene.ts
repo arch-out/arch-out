@@ -1,6 +1,10 @@
 export default class UiScene extends Phaser.Scene {
   constructor() {
-    super(null);
+    super({
+      key:'uiScene',
+      active: false,
+      visible: false
+    });
   }
 
   update() {}

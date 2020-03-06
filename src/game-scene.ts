@@ -9,7 +9,9 @@ const size = 5;
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super({
-      active: true,
+      key:'gameScene',
+      active: false,
+      visible: false,
       physics: {
         default: "arcade",
         arcade: {}
