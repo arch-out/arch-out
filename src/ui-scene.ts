@@ -1,10 +1,15 @@
 import GameScene from "./game-scene";
+import { Viewport } from "./types";
 
 export default class UiScene extends Phaser.Scene {
+  public static KEY: string = "UiScene";
+
   viewport: Viewport;
 
   constructor(viewport: Viewport) {
     super({
+      key: UiScene.KEY,
+      active: false,
       visible: true
     });
     this.viewport = viewport;
