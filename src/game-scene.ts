@@ -1,13 +1,8 @@
 import * as Phaser from "phaser";
-import { BoardSize, Viewport } from "./types";
+import { Viewport } from "./types";
 import { Snake } from "./snake";
 import Player from "./player";
 import UiScene from "./ui-scene";
-
-const boardSize: BoardSize = {
-  width: 800,
-  height: 600
-};
 
 const controls = [
   { left: "LEFT", right: "RIGHT" },

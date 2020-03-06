@@ -18,7 +18,10 @@ export class GameObjectFactoryWithPlugins extends Phaser.GameObjects
 export class PhaserSceneWithPlugins extends Phaser.Scene {
   add: GameObjectFactoryWithPlugins;
 }
-export type BoardSize = {
+
+export type Viewport = {
+  x: number;
+  y: number;
   width: number;
   height: number;
 };
