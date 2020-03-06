@@ -41,7 +41,12 @@ export default class GameScene extends Phaser.Scene {
 
   snakes: Snake[] = [];
   startTime: number;
-  countdown: Phaser.GameObjects.Text;
+  countdown: {
+    text: Phaser.GameObjects.Text;
+    size: number;
+    startTime: number;
+    color: string;
+  };
 
   constructor(viewport: Viewport, players: Player[]) {
     super({
@@ -87,11 +92,12 @@ export default class GameScene extends Phaser.Scene {
         )
     );
 
-    this.countdown = this.add.text(200 - 100, 300 - 500 / 2, "", {
-      fontSize: 500
-    });
-    this.countdown.setColor("#34eb4c");
-    this.startTime = Date.now();
+    this.countdown = {
+      text: this.add.text(200 - 100, 300 - 500 / 2, "", {}),
+      size: 500,
+      startTime: Date.now(),
+      color: "#34eb4c"
+    };
 
     this.scene.launch(UiScene.KEY);
   }
@@ -114,12 +120,22 @@ export default class GameScene extends Phaser.Scene {
       this.reset();
     }
 
-    var elapsed = (Date.now() - this.startTime) / 1000;
-    if (elapsed < 3) {
-      this.countdown.setText(`${3 - Math.floor(elapsed)}`);
+    this.countdown.text.setText(`${3 - Math.floor(elapsed)}`);
+    var elapsed = Date.now() - this.countdown.startTime;
+    if (elapsed / 1000 < 3) {
+      this.countdown.size = 100 * (3 - elapsed / 1000) + 200;
+
+      this.countdown.text.setText(`${3 - Math.floor(elapsed / 1000)}`);
+      this.countdown.text.setColor(this.countdown.color);
+      this.countdown.text.setFontSize(this.countdown.size);
+      this.countdown.text.setPosition(
+        200 - this.countdown.size / 4,
+        300 - this.countdown.size / 2
+      );
       return;
     }
-    this.countdown.destroy();
+
+    this.countdown.text.destroy();
 
     if (this.keys.down.isDown) {
       this.speed -= 1;
