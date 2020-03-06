@@ -84,7 +84,7 @@ export default class GameScene extends Phaser.Scene {
           100 + i * 100,
           controls[i].left,
           controls[i].right,
-          boardSize
+          this.viewport
         )
     );
 

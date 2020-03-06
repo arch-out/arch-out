@@ -22,10 +22,3 @@ export type BoardSize = {
   width: number;
   height: number;
 };
-
-export type Viewport = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};

@@ -1,4 +1,4 @@
-import { BoardSize } from "./types";
+import { Viewport } from "./types";
 import Player from "./player";
 
 const size = 5;
@@ -18,14 +18,13 @@ export class Snake extends Phaser.GameObjects.Arc {
   left: Phaser.Input.Keyboard.Key;
   right: Phaser.Input.Keyboard.Key;
 
-  boardSize: BoardSize;
-
   lastCollidable: Phaser.GameObjects.GameObject;
   lastSelfCollidable: Phaser.GameObjects.GameObject;
 
   player: Player;
   creatingHole: boolean = false;
   holeSize: number = 0;
+  viewport: Viewport;
 
   constructor(
     scene: Phaser.Scene,
@@ -34,7 +33,7 @@ export class Snake extends Phaser.GameObjects.Arc {
     y: number,
     keyLeft: string,
     keyRight: string,
-    boardSize: BoardSize
+    viewport: Viewport
   ) {
     super(scene, 0);
 
@@ -49,7 +48,7 @@ export class Snake extends Phaser.GameObjects.Arc {
     this.left = scene.input.keyboard.addKey(keyLeft);
     this.right = scene.input.keyboard.addKey(keyRight);
 
-    this.boardSize = boardSize;
+    this.viewport = viewport;
   }
 
   setDead() {
@@ -135,9 +134,9 @@ export class Snake extends Phaser.GameObjects.Arc {
     }
 
     if (
-      this.head.x >= this.boardSize.width ||
+      this.head.x >= this.viewport.width ||
       this.head.x <= 0 ||
-      this.head.y >= this.boardSize.height ||
+      this.head.y >= this.viewport.height ||
       this.head.y <= 0
     ) {
       this.setDead();
