@@ -33,6 +33,7 @@ export default class GameScene extends Phaser.Scene {
     down: Phaser.Input.Keyboard.Key;
     up: Phaser.Input.Keyboard.Key;
     d: Phaser.Input.Keyboard.Key;
+    r: Phaser.Input.Keyboard.Key;
   };
   showHitboxes = false;
 
@@ -69,7 +70,8 @@ export default class GameScene extends Phaser.Scene {
     this.keys = {
       down: this.input.keyboard.addKey("DOWN"),
       up: this.input.keyboard.addKey("UP"),
-      d: this.input.keyboard.addKey("d")
+      d: this.input.keyboard.addKey("d"),
+      r: this.input.keyboard.addKey("r")
     };
 
     this.snakes = this.players.map(
@@ -94,10 +96,22 @@ export default class GameScene extends Phaser.Scene {
     this.scene.launch(UiScene.KEY);
   }
 
+  reset() {
+    const aliveSnakes = this.snakes.filter(f => !f.dead);
+
+    if (aliveSnakes.length === 0) {
+      this.scene.restart();
+    }
+  }
+
   update() {
     if (!this.showHitboxes && this.keys.d.isDown) {
       this.showHitboxes = true;
       this.physics.world.createDebugGraphic();
+    }
+
+    if (this.keys.r.isDown) {
+      this.reset();
     }
 
     var elapsed = (Date.now() - this.startTime) / 1000;

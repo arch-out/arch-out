@@ -107,7 +107,7 @@ export class Snake extends Phaser.GameObjects.Arc {
       const collidable = this.scene.add.circle(
         this.head.x,
         this.head.y,
-        size * 0.5
+        size * 0.7
       );
       this.scene.physics.add.existing(collidable);
       this.history.push(collidable);
