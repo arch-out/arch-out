@@ -12,7 +12,8 @@ export class Snake extends Phaser.GameObjects.Arc {
   dead = false;
 
   head: Phaser.GameObjects.Rectangle;
-  path: Phaser.Curves.Path;
+  oldPaths: Phaser.Curves.Path[] = [];
+  currentPath: Phaser.Curves.Path;
 
   left: Phaser.Input.Keyboard.Key;
   right: Phaser.Input.Keyboard.Key;
@@ -23,6 +24,8 @@ export class Snake extends Phaser.GameObjects.Arc {
   lastSelfCollidable: Phaser.GameObjects.GameObject;
 
   player: Player;
+  creatingHole: boolean = false;
+  holeSize: number = 0;
 
   constructor(
     scene: Phaser.Scene,
@@ -40,7 +43,7 @@ export class Snake extends Phaser.GameObjects.Arc {
     this.graphics = scene.add.graphics();
 
     this.head = scene.add.circle(x, y, size, 0xffffff);
-    this.path = scene.add.path(x, y);
+    this.currentPath = scene.add.path(x, y);
     scene.physics.add.existing(this.head);
 
     this.left = scene.input.keyboard.addKey(keyLeft);
@@ -51,6 +54,21 @@ export class Snake extends Phaser.GameObjects.Arc {
 
   setDead() {
     this.dead = true;
+  }
+
+  createHole() {
+    console.log("new hole");
+
+    this.creatingHole = true;
+    this.holeSize = 0;
+    this.oldPaths.push(this.currentPath);
+    this.currentPath = null;
+  }
+
+  stopCreatingHole() {
+    this.creatingHole = false;
+    this.holeSize = 0;
+    this.currentPath = this.scene.add.path(this.head.x, this.head.y);
   }
 
   update() {
@@ -75,18 +93,46 @@ export class Snake extends Phaser.GameObjects.Arc {
     this.head.x += dx;
     this.head.y += dy;
 
-    const collidable = this.scene.add.circle(this.head.x, this.head.y, size);
-    this.scene.physics.add.existing(collidable);
-    this.history.push(collidable);
-    this.lastCollidable = collidable;
+    if (!this.creatingHole) {
+      const random = Math.floor(Math.random() * 100);
 
-    if (this.history.length > 15) {
-      this.lastSelfCollidable = this.history.shift();
+      if (random === 7) {
+        this.createHole();
+      }
+    }
+
+    if (this.creatingHole) {
+      this.holeSize++;
+    } else {
+      // Add colliders
+      const collidable = this.scene.add.circle(
+        this.head.x,
+        this.head.y,
+        size * 0.7
+      );
+      this.scene.physics.add.existing(collidable);
+      this.history.push(collidable);
+      this.lastCollidable = collidable;
+
+      if (this.history.length > 15) {
+        this.lastSelfCollidable = this.history.shift();
+      }
     }
 
     this.graphics.lineStyle(size * 2, this.player.color.color, 0.3);
-    this.path.lineTo(this.head.x, this.head.y);
-    this.path.draw(this.graphics);
+
+    this.oldPaths.forEach(path => {
+      path.draw(this.graphics);
+    });
+
+    if (this.creatingHole && this.holeSize > 10) {
+      this.stopCreatingHole();
+    }
+
+    if (this.currentPath) {
+      this.currentPath.lineTo(this.head.x, this.head.y);
+      this.currentPath.draw(this.graphics);
+    }
 
     if (
       this.head.x >= this.boardSize.width ||
