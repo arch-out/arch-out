@@ -56,8 +56,6 @@ export class Snake extends Phaser.GameObjects.Arc {
   }
 
   createHole() {
-    console.log("new hole");
-
     this.creatingHole = true;
     this.holeSize = 0;
     this.oldPaths.push(this.currentPath);
