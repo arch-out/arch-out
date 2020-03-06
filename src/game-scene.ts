@@ -21,7 +21,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   angle: number = 0;
-  speed: number = 5;
+  speed: number = 3;
   keys: {
     down: Phaser.Input.Keyboard.Key;
     up: Phaser.Input.Keyboard.Key;
@@ -31,8 +31,7 @@ export default class GameScene extends Phaser.Scene {
 
   path: Phaser.Curves.Path;
 
-  snake1: Snake;
-  snake2: Snake;
+  snakes: Snake[] = [];
 
   create() {
     this.input.enabled = true;
@@ -42,9 +41,11 @@ export default class GameScene extends Phaser.Scene {
       d: this.input.keyboard.addKey("d")
     };
 
-    this.snake1 = new Snake(this, 100, 100, "LEFT", "RIGHT", boardSize);
-    this.snake2 = new Snake(this, 200, 200, "a", "s", boardSize);
+    this.snakes.push(new Snake(this, 100, 100, "a", "s", boardSize));
+    this.snakes.push(new Snake(this, 200, 200, "v", "b", boardSize));
+    this.snakes.push(new Snake(this, 300, 300, "LEFT", "RIGHT", boardSize));
   }
+
   update() {
     if (!this.showHitboxes && this.keys.d.isDown) {
       this.showHitboxes = true;
@@ -58,7 +59,24 @@ export default class GameScene extends Phaser.Scene {
       this.speed += 1;
     }
 
-    this.snake1.update();
-    this.snake2.update();
+    this.snakes.forEach(s => s.update());
+
+    this.snakes.forEach((snake, index, array) => {
+      const lastCollidable = snake.lastCollidable;
+
+      const otherLastColliders = array.reduce((acc, curr, i) => {
+        if (i !== index) {
+          acc.push(curr.lastCollidable);
+        }
+
+        return acc;
+      }, []);
+
+      otherLastColliders.concat(lastCollidable).forEach(collidable => {
+        this.physics.add.collider(snake.head, collidable, () =>
+          snake.setDead()
+        );
+      });
+    });
   }
 }

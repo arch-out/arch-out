@@ -1,7 +1,7 @@
 import { BoardSize } from "./types";
 
 const size = 5;
-const speed = 4;
+const speed = 3;
 
 export class Snake extends Phaser.GameObjects.Arc {
   graphics: Phaser.GameObjects.Graphics;
@@ -11,13 +11,14 @@ export class Snake extends Phaser.GameObjects.Arc {
   dead = false;
 
   head: Phaser.GameObjects.Rectangle;
-  tail: Phaser.GameObjects.GameObject[] = [];
   path: Phaser.Curves.Path;
 
   left: Phaser.Input.Keyboard.Key;
   right: Phaser.Input.Keyboard.Key;
 
   boardSize: BoardSize;
+
+  lastCollidable: Phaser.GameObjects.GameObject;
 
   constructor(
     scene: Phaser.Scene,
@@ -66,16 +67,13 @@ export class Snake extends Phaser.GameObjects.Arc {
     this.head.y += dy;
 
     this.history.push(this.scene.add.circle(this.head.x, this.head.y, size));
-    if (this.history.length > speed) {
+    if (this.history.length > 5) {
       const crashable = this.history.shift();
-      this.tail.push(crashable);
       this.scene.physics.add.existing(crashable);
-      this.scene.physics.add.collider(this.head, crashable, () => {
-        if (!this.dead) {
-          this.setDead();
-        }
-      });
+
+      this.lastCollidable = crashable;
     }
+
     this.graphics.lineStyle(size * 2, 0x00ff00, 0.3);
     this.path.lineTo(this.head.x, this.head.y);
     this.path.draw(this.graphics);
