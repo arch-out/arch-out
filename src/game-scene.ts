@@ -1,21 +1,22 @@
 import * as Phaser from "phaser";
 
-const boardSize = {
-  width: 800,
-  height: 600
-};
 const size = 5;
-
 export default class GameScene extends Phaser.Scene {
-  constructor() {
+  constructor(viewport: Viewport) {
     super({
-      active: true,
+      key: GameScene.KEY,
+      visible: true,
       physics: {
         default: "arcade",
         arcade: {}
       }
     });
+    this.viewport = viewport;
   }
+
+  public static KEY: string = "GameScene";
+
+  viewport: Viewport;
 
   history: Phaser.GameObjects.GameObject[] = [];
   tail: Phaser.GameObjects.GameObject[] = [];
@@ -25,7 +26,7 @@ export default class GameScene extends Phaser.Scene {
   position: {
     x: number;
     y: number;
-  } = { x: 100, y: 100 };
+  } = { x: 300, y: 300 };
   angle: number = 0;
   speed: number = 5;
   keys: {
@@ -42,6 +43,13 @@ export default class GameScene extends Phaser.Scene {
   path: Phaser.Curves.Path;
 
   create() {
+    this.cameras.main.setViewport(
+      this.viewport.x,
+      this.viewport.y,
+      this.viewport.width,
+      this.viewport.height
+    );
+    this.cameras.main.setBackgroundColor(0x333333);
     this.graphics = this.add.graphics();
     this.input.enabled = true;
     this.path = this.add.path(this.position.x, this.position.y);
@@ -98,9 +106,9 @@ export default class GameScene extends Phaser.Scene {
     this.path.draw(this.graphics);
 
     if (
-      this.head.x >= boardSize.width ||
+      this.head.x >= this.viewport.width ||
       this.head.x <= 0 ||
-      this.head.y >= boardSize.height ||
+      this.head.y >= this.viewport.height ||
       this.head.y <= 0
     ) {
       this.dead = true;

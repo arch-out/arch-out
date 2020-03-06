@@ -2,11 +2,6 @@ import * as Phaser from "phaser";
 import UiScene from "./ui-scene";
 import GameScene from "./game-scene";
 
-type Position = {
-  x: number;
-  y: number;
-};
-
 var config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: "phaser-example",
@@ -19,8 +14,20 @@ var config: Phaser.Types.Core.GameConfig = {
   dom: {
     createContainer: false
   },
-  scene: [new UiScene(), new GameScene()],
-  backgroundColor: 0x333333
+  scene: [
+    new UiScene({
+      x: 0,
+      y: 0,
+      width: 200,
+      height: 600
+    }),
+    new GameScene({
+      x: 200,
+      y: 0,
+      width: 600,
+      height: 600
+    })
+  ]
 };
 
 new Phaser.Game(config);
