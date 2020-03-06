@@ -16,10 +16,13 @@ export default class TitleScene extends Phaser.Scene {
   create() {
     var text = this.add.text(100,100, 'START');
     text.setInteractive({ useHandCursor: true });
-    text.on('pointerdown', () => this.clickButton());
+    text.on('pointerdown', () => this.startGame());
+
+    var keyObj = this.input.keyboard.addKey('space');
+    keyObj.on('down', () => this.startGame());
   }
 
-  clickButton() {
+  startGame() {
     this.scene.switch('gameScene');
 }
 
