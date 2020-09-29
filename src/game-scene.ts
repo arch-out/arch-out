@@ -4,12 +4,20 @@ import { Snake } from "./snake";
 import Player from "./player";
 import UiScene from "./ui-scene";
 import EndScene from "./end-scene";
+import lightning from "./images/lightning.png";
+import { Item } from "./item";
+import { getRandomInt } from "./utils";
+
+type Position = {
+  x: number;
+  y: number;
+};
 
 const controls = [
   { left: "LEFT", right: "RIGHT" },
   { left: "a", right: "s" },
   { left: "v", right: "b" },
-  { left: "p", right: "å" }
+  { left: "p", right: "å" },
 ];
 
 export default class GameScene extends Phaser.Scene {
@@ -21,12 +29,11 @@ export default class GameScene extends Phaser.Scene {
   history: Phaser.GameObjects.GameObject[] = [];
   tail: Phaser.GameObjects.GameObject[] = [];
 
+  items: Item[] = [];
+
   graphics: Phaser.GameObjects.Graphics;
 
-  position: {
-    x: number;
-    y: number;
-  } = { x: 300, y: 300 };
+  position: Position = { x: 300, y: 300 };
 
   angle: number = 0;
   speed: number = 3;
@@ -56,8 +63,8 @@ export default class GameScene extends Phaser.Scene {
       visible: true,
       physics: {
         default: "arcade",
-        arcade: {}
-      }
+        arcade: {},
+      },
     });
     this.viewport = viewport;
     this.players = players;
@@ -77,7 +84,7 @@ export default class GameScene extends Phaser.Scene {
       down: this.input.keyboard.addKey("DOWN"),
       up: this.input.keyboard.addKey("UP"),
       d: this.input.keyboard.addKey("d"),
-      r: this.input.keyboard.addKey("r")
+      r: this.input.keyboard.addKey("r"),
     };
 
     this.snakes = this.players.map(
@@ -97,18 +104,26 @@ export default class GameScene extends Phaser.Scene {
       text: this.add.text(200 - 100, 300 - 500 / 2, "", {}),
       size: 500,
       startTime: Date.now(),
-      color: "#f0f"
+      color: "#f0f",
     };
 
     this.scene.launch(UiScene.KEY);
   }
 
   reset() {
-    const aliveSnakes = this.snakes.filter(f => !f.dead);
+    const aliveSnakes = this.snakes.filter((f) => !f.dead);
 
     if (aliveSnakes.length === 0) {
       this.scene.restart();
     }
+  }
+
+  preload() {
+    this.load.image("lightning", lightning);
+  }
+
+  addItem() {
+    this.items.push(new Item(this, "lightning", this.viewport));
   }
 
   update() {
@@ -136,6 +151,10 @@ export default class GameScene extends Phaser.Scene {
       return;
     }
 
+    if (getRandomInt(1, 500) === 1 && this.items.length < 4) {
+      this.addItem();
+    }
+
     this.countdown.text.destroy();
 
     if (this.keys.down.isDown) {
@@ -145,7 +164,7 @@ export default class GameScene extends Phaser.Scene {
       this.speed += 1;
     }
 
-    this.snakes.forEach(s => s.update());
+    this.snakes.forEach((s) => s.update());
 
     this.snakes.forEach((snake, snakeIndex, array) => {
       if (snake.dead) {
@@ -154,12 +173,30 @@ export default class GameScene extends Phaser.Scene {
 
       array
         .filter((_, i) => i !== snakeIndex)
-        .map(s => s.lastCollidable)
+        .map((s) => s.lastCollidable)
         .concat(snake.lastSelfCollidable ? [snake.lastSelfCollidable] : [])
-        .forEach(collidable => {
+        .forEach((collidable) => {
           this.physics.add.collider(snake.head, collidable, () =>
             snake.setDead()
           );
+
+          this.items.forEach((item) => {
+            this.physics.add.collider(snake.head, item.collidable, () => {
+              this.items = this.items.filter((i) => i !== item);
+              item.destroy();
+
+              this.snakes.forEach((s) => {
+                if (s === snake) {
+                  return;
+                }
+
+                s.setSpeed(5);
+                setTimeout(() => {
+                  snake.setSpeed(3);
+                }, 5000);
+              });
+            });
+          });
         });
     });
 
@@ -169,6 +206,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   gameover(): boolean {
-    return this.snakes.every(s => s.dead);
+    return this.snakes.every((s) => s.dead);
   }
 }

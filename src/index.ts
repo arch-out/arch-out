@@ -12,7 +12,7 @@ var gameScene = new GameScene(
     x: 200,
     y: 0,
     width: 600,
-    height: 600
+    height: 600,
   },
   players
 );
@@ -21,7 +21,7 @@ var uiScene = new UiScene(
     x: 0,
     y: 0,
     width: 200,
-    height: 600
+    height: 600,
   },
   players
 );
@@ -35,11 +35,11 @@ var config: Phaser.Types.Core.GameConfig = {
   height: 600,
   scale: {
     mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH
+    autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   dom: {
-    createContainer: false
-  }
+    createContainer: false,
+  },
 };
 
 var game = new Phaser.Game(config);
