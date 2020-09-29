@@ -1,24 +1,36 @@
 import GameScene from "./game-scene";
+import titlePath from "./images/gameTitle.png";
 
 export default class TitleScene extends Phaser.Scene {
   constructor() {
     super({
       key: "titleScene",
       active: true,
-      visible: true
+      visible: true,
     });
+  }
+
+  preload() {
+    this.load.image("title", titlePath);
   }
 
   update() {}
 
   create() {
-    var text = this.add.text(100, 100, "START");
+    var centerX = this.cameras.main.centerX;
+    var centerY = this.cameras.main.centerY;
+    var titleImgage = this.add.image(centerX, centerY - 100, "title");
+    titleImgage.setScale(0.5);
+
+    var text = this.add.text(centerX, centerY, "START").setOrigin(0.5);
     text.setInteractive({ useHandCursor: true });
     text.on("pointerdown", () => this.startGame());
 
-    this.add.text(100, 200, "Press 'F' for full screen.", {
-      fontSize: 10
-    });
+    this.add
+      .text(centerX, centerY + 150, "Press 'F' for full screen.", {
+        fontSize: 10,
+      })
+      .setOrigin(0.5);
 
     var keyObj = this.input.keyboard.addKey("space");
     keyObj.on("down", () => this.startGame());
