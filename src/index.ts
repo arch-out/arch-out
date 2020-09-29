@@ -3,6 +3,7 @@ import UiScene from "./ui-scene";
 import GameScene from "./game-scene";
 import TitleScene from "./title-scene";
 import Player from "./player";
+import EndScene from "./end-scene";
 
 var players: Player[] = [new Player("player1"), new Player("player2")];
 
@@ -25,6 +26,7 @@ var uiScene = new UiScene(
   players
 );
 var titleScene = new TitleScene();
+var endScene = new EndScene();
 
 var config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -46,6 +48,7 @@ var game = new Phaser.Game(config);
 game.scene.add("titleScene", titleScene);
 game.scene.add("uiScene", uiScene);
 game.scene.add("gameScene", gameScene);
+game.scene.add("endScenee", endScene);
 
 // start title
 game.scene.start("titleScene");

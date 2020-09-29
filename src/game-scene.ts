@@ -3,6 +3,7 @@ import { Viewport } from "./types";
 import { Snake } from "./snake";
 import Player from "./player";
 import UiScene from "./ui-scene";
+import EndScene from "./end-scene";
 
 const controls = [
   { left: "LEFT", right: "RIGHT" },
@@ -96,7 +97,7 @@ export default class GameScene extends Phaser.Scene {
       text: this.add.text(200 - 100, 300 - 500 / 2, "", {}),
       size: 500,
       startTime: Date.now(),
-      color: "#34eb4c"
+      color: "#f0f"
     };
 
     this.scene.launch(UiScene.KEY);
@@ -161,5 +162,13 @@ export default class GameScene extends Phaser.Scene {
           );
         });
     });
+
+    if (this.gameover()) {
+      this.scene.switch(EndScene.KEY);
+    }
+  }
+
+  gameover(): boolean {
+    return this.snakes.every(s => s.dead);
   }
 }
