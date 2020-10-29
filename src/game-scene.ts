@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 import { Viewport } from "./types";
 import { Snake } from "./snake";
 import Player from "./player";
+import Store from "./store";
 import UiScene from "./ui-scene";
 import EndScene from "./end-scene";
 import lightning from "./images/lightning.png";
@@ -25,6 +26,7 @@ export default class GameScene extends Phaser.Scene {
 
   players: Player[];
   viewport: Viewport;
+  store: Store = new Store();
 
   history: Phaser.GameObjects.GameObject[] = [];
   tail: Phaser.GameObjects.GameObject[] = [];
@@ -206,6 +208,7 @@ export default class GameScene extends Phaser.Scene {
     });
 
     if (this.gameover()) {
+      this.players.forEach(player => this.store.save(player));
       this.scene.switch(EndScene.KEY);
     }
   }
