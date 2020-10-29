@@ -2,8 +2,16 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "~*": ["./*"]
+      "~*": [
+        "./*"
+      ]
     },
+    "lib": [
+      "ES2020",
+      "DOM"
+    ],
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ]
 }

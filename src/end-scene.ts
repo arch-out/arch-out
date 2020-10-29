@@ -42,7 +42,7 @@ export default class EndScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         this.store.readScores().then(players => {
-            players.forEach((player, index) => this.add.text(200, 20 * index, `${player.name}: ${player.score}`));
+            players.forEach((player, index) => this.add.text(200, 50 + 20 * index, `${player.name}: ${player.score}`));
         });
     }
 }

@@ -4,10 +4,10 @@ import Player from './player'
 export default class Store {
     private DbKey: string = "fnAD5VWvjSACB8IMICKM1AMubjYW_iYNPLK8PJf3";
 
-    save(player: Player) {
-        this.readScores().then(highscore => {
-            if (highscore.length === 0 || player.score > highscore[highscore.length - 1].score) {
-                this.writeScore(player);
+    save(player: Player): Promise<void> {
+        return this.readScores().then(async highscore => {
+            if (highscore.length < 10 || player.score > highscore[highscore.length - 1].score) {
+                await this.writeScore(player);
             }
         });
     }
@@ -26,10 +26,10 @@ export default class Store {
         }));
     }
 
-    writeScore(player): Promise<object> {
-        const name = window.prompt("Gratulerer, du har nådd topplisten! Vennligst skriv inn navnet ditt:")
+    writeScore(player: Player): Promise<object> {
+        const name = window.prompt(`Gratulerer, du har nådd topplisten med en score på ${player.score}! Vennligst skriv inn navnet ditt:`)
         const query = q.Create(q.Collection("scores"), {
-            data: {
+            data: <Player>{
                 ...player,
                 name: name
             }

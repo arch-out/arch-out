@@ -57,6 +57,7 @@ export default class GameScene extends Phaser.Scene {
     startTime: number;
     color: string;
   };
+  stopped: Boolean = false;
 
   constructor(viewport: Viewport, players: Player[]) {
     super({
@@ -134,6 +135,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
+    if (this.stopped) return;
+
     if (!this.showHitboxes && this.keys.d.isDown) {
       this.showHitboxes = true;
       this.physics.world.createDebugGraphic();
@@ -207,13 +210,19 @@ export default class GameScene extends Phaser.Scene {
         });
     });
 
-    if (this.gameover()) {
-      this.players.forEach(player => this.store.save(player));
-      this.scene.switch(EndScene.KEY);
+    this.checkState();
+
+    if (this.stopped) {
+      const promises = this.players.map(player => this.store.save(player));
+      Promise.all(promises).then(p => {
+        this.scene.switch(EndScene.KEY);
+      })
     }
   }
 
-  gameover(): boolean {
-    return this.snakes.every((s) => s.dead);
+  checkState() {
+    if (this.snakes.every((s) => s.dead)) {
+      this.stopped = true;
+    }
   }
 }
