@@ -29,49 +29,54 @@ export default class TitleScene extends Phaser.Scene {
     var centerX = this.cameras.main.centerX;
     var centerY = this.cameras.main.centerY;
 
-    var titleImage = this.add.image(centerX, centerY - 160, "title");
-    titleImage.setScale(0.5);
-
-    var text = this.add.text(centerX, centerY - 90, "START").setOrigin(0.5);
-    text.setInteractive({ useHandCursor: true });
-    text.on("pointerdown", () => this.startGame());
+    this.add
+      .image(centerX, centerY - 160, "title")
+      .setScale(0.5);
 
     this.add
-      .text(centerX, centerY - 60, "Press 'F' for full screen.", {
+      .text(centerX, centerY - 90, "START")
+      .setOrigin(0.5)
+      .setInteractive({ useHandCursor: true })
+      .on("pointerdown", () => this.startGame());
+
+    this.add
+      .text(centerX, centerY - 60, "HIGH SCORE").setOrigin(0.5)
+      .setInteractive({ useHandCursor: true })
+      .on("pointerdown", () => this.showHighscore());
+
+    this.add
+      .text(centerX, centerY - 30, "Press 'F' for full screen.", {
         fontSize: 10,
       })
       .setOrigin(0.5);
 
     this.add
-      .text(centerX, centerY - 40, "Press 'H' for high score.", {
-        fontSize: 10,
-      })
-      .setOrigin(0.5);
-
-    this.add
-      .text(centerX, centerY + 10, "Det besta spelet eg nokon gong har spelt", {
+      .text(centerX, centerY + 20, "Det besta spelet eg nokon gong har spelt", {
         fontSize: 14,
       })
       .setOrigin(0.5);
 
-    var terningImage = this.add.image(centerX + 200, centerY + 10, "terningkast6");
-    terningImage.setScale(0.2);
+    this.add
+      .image(centerX + 200, centerY + 20, "terningkast6")
+      .setScale(0.2);
 
     this.add
-      .text(centerX + 70, centerY + 30, "- sa ingen", {
+      .text(centerX + 70, centerY + 40, "- sa ingen", {
         fontSize: 10,
       })
       .setOrigin(0.5);
 
-    var dag = this.add
+    this.add
       .image(centerX - 200, centerY + 180, "dag")
-      .setScale(0.75);
-    dag.rotation = 0.3;
-    var aina = this.add.image(centerX, centerY + 200, "aina").setScale(0.7);
-    var eivind = this.add
+      .setScale(0.75)
+      .setRotation(0.3);
+    this.add
+      .image(centerX, centerY + 200, "aina")
+      .setScale(0.7);
+    this.add
       .image(centerX + 200, centerY + 180, "eivind")
-      .setScale(0.75);
-    eivind.rotation = -0.3;
+      .setScale(0.75)
+      .setRotation(-0.3);
 
     this.add
       .text(centerX, centerY + 100, "Stolt presentert av:", {
@@ -79,14 +84,9 @@ export default class TitleScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    var keyObj = this.input.keyboard.addKey("space");
-    keyObj.on("down", () => this.startGame());
-
-    var f = this.input.keyboard.addKey("f");
-    f.on("down", () => this.scale.startFullscreen());
-
-    var h = this.input.keyboard.addKey("h");
-    h.on("down", () => this.showHighscore());
+    this.input.keyboard.addKey("space").on("down", () => this.startGame());
+    this.input.keyboard.addKey("f").on("down", () => this.scale.startFullscreen());
+    this.input.keyboard.addKey("h").on("down", () => this.showHighscore());
   }
 
   startGame() {
