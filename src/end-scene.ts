@@ -1,4 +1,4 @@
-import Store from "./Store";
+import Store from "./store";
 
 export default class EndScene extends Phaser.Scene {
     public static KEY: string = "EndScene";
