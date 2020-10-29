@@ -57,7 +57,7 @@ export default class GameScene extends Phaser.Scene {
     startTime: number;
     color: string;
   };
-  stopped: Boolean = false;
+  stopped: Boolean;
 
   constructor(viewport: Viewport, players: Player[]) {
     super({
@@ -74,6 +74,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    this.stopped = false;
     this.cameras.main.setViewport(
       this.viewport.x,
       this.viewport.y,
