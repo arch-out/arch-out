@@ -2,7 +2,6 @@ import { Viewport } from "./types";
 import Player from "./player";
 
 const size = 5;
-const speed = 3;
 
 export class Snake extends Phaser.GameObjects.Arc {
   graphics: Phaser.GameObjects.Graphics;
@@ -10,6 +9,7 @@ export class Snake extends Phaser.GameObjects.Arc {
 
   angle = 0;
   dead = false;
+  speed = 3;
 
   head: Phaser.GameObjects.Rectangle;
   oldPaths: Phaser.Curves.Path[] = [];
@@ -70,6 +70,10 @@ export class Snake extends Phaser.GameObjects.Arc {
     this.currentPath = this.scene.add.path(this.head.x, this.head.y);
   }
 
+  setSpeed(newSpeed: number) {
+    this.speed = newSpeed;
+  }
+
   update() {
     if (this.dead) {
       return;
@@ -80,14 +84,14 @@ export class Snake extends Phaser.GameObjects.Arc {
     this.graphics.clear();
 
     if (this.left.isDown) {
-      this.angle -= ((((2 * Math.PI) / 1000) * speed) % 2) * Math.PI;
+      this.angle -= ((((2 * Math.PI) / 1000) * this.speed) % 2) * Math.PI;
     }
     if (this.right.isDown) {
-      this.angle += ((((2 * Math.PI) / 1000) * speed) % 2) * Math.PI;
+      this.angle += ((((2 * Math.PI) / 1000) * this.speed) % 2) * Math.PI;
     }
 
-    const dx = speed * Math.cos(this.angle);
-    const dy = speed * Math.sin(this.angle);
+    const dx = this.speed * Math.cos(this.angle);
+    const dy = this.speed * Math.sin(this.angle);
 
     this.head.x += dx;
     this.head.y += dy;
@@ -120,7 +124,7 @@ export class Snake extends Phaser.GameObjects.Arc {
 
     this.graphics.lineStyle(size * 2, this.player.color.color, 0.3);
 
-    this.oldPaths.forEach(path => {
+    this.oldPaths.forEach((path) => {
       path.draw(this.graphics);
     });
 
