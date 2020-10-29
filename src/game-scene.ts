@@ -75,6 +75,7 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     this.stopped = false;
+    this.players.forEach(p => p.score = 0)
     this.cameras.main.setViewport(
       this.viewport.x,
       this.viewport.y,
