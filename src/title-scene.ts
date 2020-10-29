@@ -4,6 +4,7 @@ import terningPath from "./images/terningkast6.png";
 import dagPath from "./images/dag.png";
 import ainaPath from "./images/aina.png";
 import eivindPath from "./images/eivind.png";
+import EndScene from "./end-scene";
 
 export default class TitleScene extends Phaser.Scene {
   constructor() {
@@ -22,12 +23,12 @@ export default class TitleScene extends Phaser.Scene {
     this.load.image("eivind", eivindPath);
   }
 
-  update() {}
+  update() { }
 
   create() {
     var centerX = this.cameras.main.centerX;
     var centerY = this.cameras.main.centerY;
-    
+
     var titleImage = this.add.image(centerX, centerY - 160, "title");
     titleImage.setScale(0.5);
 
@@ -37,6 +38,12 @@ export default class TitleScene extends Phaser.Scene {
 
     this.add
       .text(centerX, centerY - 60, "Press 'F' for full screen.", {
+        fontSize: 10,
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .text(centerX, centerY - 40, "Press 'H' for high score.", {
         fontSize: 10,
       })
       .setOrigin(0.5);
@@ -77,9 +84,16 @@ export default class TitleScene extends Phaser.Scene {
 
     var f = this.input.keyboard.addKey("f");
     f.on("down", () => this.scale.startFullscreen());
+
+    var h = this.input.keyboard.addKey("h");
+    h.on("down", () => this.showHighscore());
   }
 
   startGame() {
     this.scene.switch(GameScene.KEY);
+  }
+
+  showHighscore() {
+    this.scene.switch(EndScene.KEY);
   }
 }
