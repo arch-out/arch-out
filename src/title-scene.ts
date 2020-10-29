@@ -25,14 +25,9 @@ export default class TitleScene extends Phaser.Scene {
   create() {
     var centerX = this.cameras.main.centerX;
     var centerY = this.cameras.main.centerY;
+    
     var titleImgage = this.add.image(centerX, centerY - 120, "title");
     titleImgage.setScale(0.5);
-
-    this.add
-      .text(centerX, centerY + 150, "LAGA AV", {
-        fontSize: 20,
-      })
-      .setOrigin(0.5);
 
     var dag = this.add
       .image(centerX - 200, centerY + 180, "dag")
