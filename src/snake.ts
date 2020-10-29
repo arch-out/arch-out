@@ -1,5 +1,6 @@
 import { Viewport } from "./types";
 import Player from "./player";
+import { getRandomNumber } from "./utils";
 
 const size = 5;
 
@@ -45,14 +46,33 @@ export class Snake extends Phaser.GameObjects.Arc {
     this.currentPath = scene.add.path(x, y);
     scene.physics.add.existing(this.head);
 
+    this.angle = getRandomNumber(0, 2 * Math.PI);
+
     this.left = scene.input.keyboard.addKey(keyLeft);
     this.right = scene.input.keyboard.addKey(keyRight);
 
     this.viewport = viewport;
+
+    this.graphics.lineStyle(size * 0.5, this.player.color.color, 1);
+
+    const directionpath = this.scene.add.path(this.head.x, this.head.y);
+    directionpath.lineTo(
+      this.head.x + this.getDx() * 5,
+      this.head.y + this.getDy() * 5
+    );
+    directionpath.draw(this.graphics);
   }
 
   setDead() {
     this.dead = true;
+  }
+
+  getDx() {
+    return this.speed * Math.cos(this.angle);
+  }
+
+  getDy() {
+    return this.speed * Math.sin(this.angle);
   }
 
   createHole() {
@@ -90,11 +110,10 @@ export class Snake extends Phaser.GameObjects.Arc {
       this.angle += ((((2 * Math.PI) / 1000) * this.speed) % 2) * Math.PI;
     }
 
-    const dx = this.speed * Math.cos(this.angle);
-    const dy = this.speed * Math.sin(this.angle);
+    this.angle = this.angle % (2 * Math.PI);
 
-    this.head.x += dx;
-    this.head.y += dy;
+    this.head.x += this.getDx();
+    this.head.y += this.getDy();
 
     if (!this.creatingHole) {
       const random = Math.floor(Math.random() * 100);

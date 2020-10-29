@@ -87,13 +87,18 @@ export default class GameScene extends Phaser.Scene {
       r: this.input.keyboard.addKey("r"),
     };
 
+    const positions = this.players.map(() => ({
+      x: getRandomInt(50, this.viewport.width - 50),
+      y: getRandomInt(50, this.viewport.height - 50),
+    }));
+
     this.snakes = this.players.map(
       (player, i) =>
         new Snake(
           this,
           player,
-          100 + i * 100,
-          100 + i * 100,
+          positions[i].x,
+          positions[i].y,
           controls[i].left,
           controls[i].right,
           this.viewport
