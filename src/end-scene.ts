@@ -37,12 +37,20 @@ export default class EndScene extends Phaser.Scene {
             c: this.input.keyboard.addKey("c")
         };
 
-        this.add.text(centerX, centerY, "Press 'R' for restart", {
-            fontSize: 10,
-        }).setOrigin(0.5);
+        this.add.text(centerX, 50, "HIGH SCORE", { fontSize: 30 })
+            .setColor("#FF0000")
+            .setOrigin(0.5, 0);
+
+        this.add.text(centerX, this.cameras.main.height - 50, "Press 'R' for restart", { fontSize: 10 }).setOrigin(0.5, 1);
 
         this.store.readScores().then(players => {
-            players.forEach((player, index) => this.add.text(200, 50 + 20 * index, `${player.name}: ${player.score}`));
+            players.forEach((player, index) => {
+                this.add.text(centerX, 100 + 20 * index, `${player.name}:`)
+                    .setOrigin(1, 0);
+
+                this.add
+                    .text(centerX + 10, 100 + 20 * index, `${player.score}`)
+            });
         });
     }
 }
