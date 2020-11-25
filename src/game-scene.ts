@@ -59,7 +59,7 @@ export default class GameScene extends Phaser.Scene {
   };
   stopped: Boolean;
 
-  constructor(viewport: Viewport, players: Player[]) {
+  constructor(viewport: Viewport) {
     super({
       key: GameScene.KEY,
       active: false,
@@ -70,7 +70,12 @@ export default class GameScene extends Phaser.Scene {
       },
     });
     this.viewport = viewport;
+  }
+
+  init(players: Player[]) {
     this.players = players;
+
+    this.scene.launch(UiScene.KEY, players);
   }
 
   create() {
@@ -116,8 +121,6 @@ export default class GameScene extends Phaser.Scene {
       startTime: Date.now(),
       color: "#f0f",
     };
-
-    this.scene.launch(UiScene.KEY);
   }
 
   reset() {

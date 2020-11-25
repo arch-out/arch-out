@@ -1,16 +1,18 @@
-import GameScene from "./game-scene";
 import titlePath from "./images/gameTitle.png";
 import terningPath from "./images/terningkast6.png";
 import dagPath from "./images/dag.png";
 import ainaPath from "./images/aina.png";
 import eivindPath from "./images/eivind.png";
 import EndScene from "./end-scene";
+import PlayerScene from "./player-scene";
 
 export default class TitleScene extends Phaser.Scene {
+  public static KEY: string = "TitleScene";
+
   constructor() {
     super({
-      key: "titleScene",
-      active: true,
+      key: TitleScene.KEY,
+      active: false,
       visible: true,
     });
   }
@@ -90,7 +92,7 @@ export default class TitleScene extends Phaser.Scene {
   }
 
   startGame() {
-    this.scene.switch(GameScene.KEY);
+    this.scene.switch(PlayerScene.KEY);
   }
 
   showHighscore() {

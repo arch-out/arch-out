@@ -2,10 +2,8 @@ import * as Phaser from "phaser";
 import UiScene from "./ui-scene";
 import GameScene from "./game-scene";
 import TitleScene from "./title-scene";
-import Player from "./player";
 import EndScene from "./end-scene";
-
-var players: Player[] = [new Player("player1"), new Player("player2")];
+import PlayerScene from "./player-scene";
 
 var gameScene = new GameScene(
   {
@@ -13,8 +11,7 @@ var gameScene = new GameScene(
     y: 0,
     width: 600,
     height: 600,
-  },
-  players
+  }
 );
 var uiScene = new UiScene(
   {
@@ -22,10 +19,10 @@ var uiScene = new UiScene(
     y: 0,
     width: 200,
     height: 600,
-  },
-  players
+  }
 );
 var titleScene = new TitleScene();
+var playerScene = new PlayerScene();
 var endScene = new EndScene();
 
 var config: Phaser.Types.Core.GameConfig = {
@@ -45,10 +42,11 @@ var config: Phaser.Types.Core.GameConfig = {
 var game = new Phaser.Game(config);
 
 // load scenes
-game.scene.add("titleScene", titleScene);
-game.scene.add("uiScene", uiScene);
-game.scene.add("gameScene", gameScene);
-game.scene.add("endScene", endScene);
+game.scene.add(TitleScene.KEY, titleScene);
+game.scene.add(PlayerScene.KEY, playerScene);
+game.scene.add(UiScene.KEY, uiScene);
+game.scene.add(GameScene.KEY, gameScene);
+game.scene.add(EndScene.KEY, endScene);
 
 // start title
-game.scene.start("titleScene");
+game.scene.start(TitleScene.KEY);

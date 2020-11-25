@@ -27,12 +27,8 @@ export default class Store {
     }
 
     writeScore(player: Player): Promise<object> {
-        const name = window.prompt(`Gratulerer, du har nådd topplisten med en score på ${player.score}! Vennligst skriv inn navnet ditt:`)
         const query = q.Create(q.Collection("scores"), {
-            data: <Player>{
-                ...player,
-                name: name
-            }
+            data: player
         });
         return this.executeQuery(query)
     }

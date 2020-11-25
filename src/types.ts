@@ -25,3 +25,8 @@ export type Viewport = {
   width: number;
   height: number;
 };
+
+export type Controls = {
+  left: string,
+  right: string
+};

@@ -9,13 +9,16 @@ export default class UiScene extends Phaser.Scene {
   players: Player[];
   texts: Phaser.GameObjects.Text[];
 
-  constructor(viewport: Viewport, players: Player[]) {
+  constructor(viewport: Viewport) {
     super({
       key: UiScene.KEY,
       active: false,
       visible: true
     });
     this.viewport = viewport;
+  }
+
+  init(players: Player[]) {
     this.players = players;
   }
 
